@@ -47,6 +47,12 @@
 			<version>4.9.3</version>
 		</dependency>
 
+		<dependency>
+    		<groupId>com.influxdb</groupId>
+    		<artifactId>influxdb-client-java</artifactId>
+    		<version>7.2.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

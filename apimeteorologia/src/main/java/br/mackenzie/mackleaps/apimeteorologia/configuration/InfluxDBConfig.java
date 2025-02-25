@@ -70,11 +70,6 @@ public class InfluxDBConfig {
      */
     @Bean
     public InfluxDBClient influxDBClient() {
-        System.out.println(influxBucket);
-        System.out.println(influxUrl);
-        System.out.println(influxToken);
-        System.out.println(influxOrg);
-        System.out.println(influxBucket);
 
         return InfluxDBClientFactory.create(influxUrl, influxToken.toCharArray(), influxOrg, influxBucket);
     }

@@ -4,37 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.write.Point;
 
+import br.mackenzie.mackleaps.apimeteorologia.configuration.InfluxDBConfig;
 import br.mackenzie.mackleaps.apimeteorologia.dtos.ReportDTO;
 
-/**
- * Serviço responsável por gerenciar a escrita de dados meteorológicos no
- * InfluxDB.
- * <p>
+/*
+ * Serviço responsável por gerenciar a escrita de dados meteorológicos no InfluxDB.
  * Essa classe utiliza o {@link InfluxDBClient} para criar e enviar pontos de
- * dados
- * para o InfluxDB. O método {@link #createPoint(ReportDTO)} converte um objeto
+ * dados para o InfluxDB. O método {@link #createPoint(ReportDTO)} converte um objeto
  * {@link ReportDTO} em um ponto de dados e o envia para o banco de dados.
- * </p>
- * 
- * <p>
  * Exemplo de uso:
- * </p>
- * 
- * <pre>
  * ReportDTO report = new ReportDTO(1L, "São Paulo", 25.0, 70.0);
  * influxServices.createPoint(report);
- * </pre>
- * 
- * @author Sabrina Midori
- * @version 1.0
  */
 @Service
 public class InfluxServices {
 
     private final InfluxDBClient influxDBClient;
+
 
     /**
      * Construtor que injeta o cliente do InfluxDB.
@@ -47,7 +37,7 @@ public class InfluxServices {
         this.influxDBClient = influxDBClient;
     }
 
-    /**
+    /*
      * Cria um ponto de dados no InfluxDB com base nos dados do relatório fornecido.
      * <p>
      * O ponto é criado com a medição <i>weather_report</i> e inclui:
@@ -66,11 +56,18 @@ public class InfluxServices {
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
         Point point = Point.measurement("weather_report")
-                .addTag("city", report.getCity())
+                .addTag("station", report.getStation())
+                .addField("windSpeed", report.getWindSpeed())
+                .addField("windDirection", report.getWindDirection())
                 .addField("temperature", report.getTemperature())
-                .addField("humidity", report.getHumidity());
+                .addField("humidityRel", report.getHumidityRel())
+                .addField("airPressure", report.getAirPressure())
+                .addField("radiation", report.getRadiation())
+                .addField("precipitation", report.getPrecipitation())
+                .addField("leafMoistening", report.getLeafMoistening())
+                .addField("tensiometer", report.getTensiometer());
 
-        writeApi.writePoint(point);
+        writeApi.writePoint("weather","teste",point);
     }
 
 }
